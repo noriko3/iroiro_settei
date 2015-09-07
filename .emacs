@@ -32,4 +32,5 @@
 (add-to-list 'auto-mode-alist '("\\.erb?\\'" . web-mode))
 
 
-;;(require 'yaml-mode)
+(require 'yaml-mode)
+(add-to-list 'auto-mode-alist '("\\.yml$" . yaml-mode))
