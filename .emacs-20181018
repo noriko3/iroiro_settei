@@ -1,0 +1,130 @@
+(package-initialize)
+(require 'package)
+(add-to-list 'package-archives
+             '("melpa" . "https://melpa.org/packages/"))
+(add-to-list 'package-archives '("marmalade" . "http://marmalade-repo.org/packages/"))
+
+
+(add-to-list 'load-path "~/.emacs.d/lisp")
+(add-to-list 'load-path "~/.emacs.d/lisp/ruby-mode")
+(setq-default indent-tabs-mode nil)
+
+
+;(require 'auto-install)
+;(auto-install-update-emacswiki-package-name t)
+;(auto-install-compatibility-setup)
+
+
+
+
+
+(require 'yaml-mode)
+(add-to-list 'auto-mode-alist '("\\.yml$" . yaml-mode))
+(add-to-list 'auto-mode-alist '("\\.erb$" . web-mode))
+(add-to-list 'auto-mode-alist '("\\.php$" . web-mode))
+
+(setq web-mode-markup-indent-offset 2)
+
+(add-hook 'php-mode-hook
+          (lambda ()
+            (setq tab-width 4)
+            (setq indent-tabs-mode nil)
+            (setq c-basic-offset 4)
+            (c-set-offset 'case-label' 4)
+            (c-set-offset 'arglist-intro' 4)
+            (c-set-offset 'arglist-cont-nonempty' 4)
+            (c-set-offset 'arglist-close' 0)
+            )
+          )
+
+
+(require 'yaml-mode)
+(add-to-list 'auto-mode-alist '("\\.yml$" . yaml-mode))
+(add-to-list 'auto-mode-alist '("\\.erb$" . web-mode))
+(add-to-list 'auto-mode-alist '("\\.php$" . web-mode))
+
+(setq web-mode-markup-indent-offset 2)
+
+(add-hook 'php-mode-hook
+          (lambda ()
+            (setq tab-width 4)
+            (setq indent-tabs-mode nil)
+            (setq c-basic-offset 4)
+            (c-set-offset 'case-label' 4)
+            (c-set-offset 'arglist-intro' 4)
+            (c-set-offset 'arglist-cont-nonempty' 4)
+            (c-set-offset 'arglist-close' 0)
+            )
+          )
+
+
+(require 'web-mode)
+(add-to-list 'auto-mode-alist '("\\.vue$" . web-mode))
+;(set-face-attribute 'web-mode-html-tag-face nil :foreground "Pink3")
+;(set-face-attribute 'web-mode-html-attr-value-face nil :foreground "Blue")
+;(set-face-attribute 'web-mode-html-attr-name-face nil :foreground "Red")
+;(set-face-attribute ' web-mode-html-tag-bracket-face nil :foreground "Blue")
+
+
+(autoload 'ruby-mode "ruby-mode"
+  "Mode for editing ruby source files" t)
+(setq auto-mode-alist
+      (append '(("\\.rb$" . ruby-mode)) auto-mode-alist))
+(setq interpreter-mode-alist (append '(("ruby" . ruby-mode))
+                                     interpreter-mode-alist))
+(autoload 'run-ruby "inf-ruby"
+  "Run an inferior Ruby process")
+(autoload 'inf-ruby-keys "inf-ruby"
+  "Set local key defs for inf-ruby in ruby-mode")
+(add-hook 'ruby-mode-hook
+          '(lambda ()
+             (inf-ruby-keys)))
+(global-font-lock-mode 1)
+
+(add-hook 'ruby-mode-hook
+          '(lambda ()
+             (setq tab-width 2)
+             (setq ruby-indent-level tab-width)
+             (setq ruby-deep-indent-paren-style nil)
+             (define-key ruby-mode-map [return] 'ruby-reindent-then-newline-and-indent)))
+             
+(require 'ruby-block)
+(ruby-block-mode t)
+(setq ruby-block-highlight-toggle t)
+
+(add-hook 'ruby-mode-hook '(lambda ()
+                             (define-key ruby-mode-map "\C-m" 'ruby-reindent-then-newline-and-indent)))
+
+(setq ruby-insert-encoding-magic-comment nil)
+
+(custom-set-variables
+ ;; custom-set-variables was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ '(package-selected-packages (quote (2048-game lua-mode basic-mode web-mode)))
+ '(ruby-insert-encoding-magic-comment nil t))
+
+(setq-default
+ header-line-format
+ '(""
+   (:propertize (:eval (shorten-directory default-directory 30))
+                face mode-line-folder-face)
+   (:propertize "%b"
+                face mode-line-filename-face)))
+
+(defun shorten-directory (dir max-length)
+  "Show up to `max-length' characters of a directory name `dir'."
+  (let ((path (reverse (split-string (abbreviate-file-name dir) "/")))
+        (output ""))
+    (when (and path (equal "" (car path)))
+      (setq path (cdr path)))
+    (while (and path (< (length output) (- max-length 4)))
+      (setq output (concat (car path) "/" output))
+      (setq path (cdr path)))
+    (when path
+      (setq output (concat ".../" output)))
+    output))
+
+(cua-mode t)
+(setq cua-enable-cua-keys nil) ; そのままだと C-x が切り取りになってしまったりするので無効化
